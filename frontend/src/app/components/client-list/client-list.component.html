@@ -1,0 +1,144 @@
+<div class="app-layout">
+  <!-- Barre latérale bleue foncée -->
+  <aside class="sidebar">
+    <div class="sidebar-menu">
+      <div class="nav-item">
+        <i class="bi bi-house"></i>
+        <span>Tableau de bord</span>
+      </div>
+      <div class="nav-item active">
+        <i class="bi bi-people-fill"></i>
+        <span>Clients</span>
+      </div>
+      <div class="nav-item">
+        <i class="bi bi-calculator"></i>
+        <span>Simulations</span>
+      </div>
+      <div class="nav-item">
+        <i class="bi bi-file-text"></i>
+        <span>Demandes</span>
+      </div>
+    </div>
+
+    <!-- Profil bas gauche avec déconnexion -->
+    <div class="sidebar-footer">
+      <div class="avatar-circle">MH</div>
+      <div class="footer-user">
+        <div class="name">{{ username }}</div>
+        <div class="role">CC PRO</div>
+      </div>
+      <i class="bi bi-box-arrow-right logout-btn" (click)="logout()" title="Se déconnecter"></i>
+    </div>
+  </aside>
+
+  <!-- Zone Principale -->
+  <main class="main-body">
+    <!-- Barre du haut -->
+    <header class="top-nav">
+      <div class="breadcrumb-text">
+        Castel PRO / TPE &gt; Clients &gt; <span class="active-crumb">Liste des clients</span>
+      </div>
+      <div class="top-user-pill">
+        <i class="bi bi-person-circle"></i>
+        <span>{{ username }}</span>
+        <small>CC PRO</small>
+        <i class="bi bi-chevron-down"></i>
+      </div>
+    </header>
+
+    <!-- Titre et Bouton Ajouter -->
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Liste des clients</h1>
+        <p class="page-subtitle">Consultez et gérez vos clients.</p>
+      </div>
+      <!-- Visible uniquement par le GESTIONNAIRE -->
+      <a *ngIf="isGestionnaire" routerLink="/clients/ajouter" class="btn-yellow">
+        <i class="bi bi-plus-lg"></i> Ajouter un client
+      </a>
+    </div>
+
+    <!-- Boîte Filtres de recherche -->
+    <div class="filter-card">
+      <h2 class="filter-title">Filtres de recherche</h2>
+      <div class="filter-grid">
+        <div class="field-col">
+          <label>CIN</label>
+          <input type="text" placeholder="Saisissez un CIN" [(ngModel)]="searchCin">
+        </div>
+        <div class="field-col">
+          <label>Nom ou prénom</label>
+          <input type="text" placeholder="Saisissez un nom ou un prénom" [(ngModel)]="searchNomPrenom">
+        </div>
+        <div class="field-col">
+          <label>Agence</label>
+          <div class="select-wrapper">
+            <select [(ngModel)]="searchAgence">
+              <option value="">Toutes les agences</option>
+              <option value="Casablanca">Casablanca</option>
+              <option value="Rabat">Rabat</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-group-filter">
+          <button class="btn-blue" (click)="currentPage = 0; onSearch()">
+            <i class="bi bi-search"></i> Rechercher
+          </button>
+          <button class="btn-white" (click)="onReset()">
+            Réinitialiser
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tableau -->
+    <div class="table-card">
+      <table class="clients-table">
+        <thead>
+          <tr>
+            <th>CIN</th>
+            <th>Nom et prénom</th>
+            <th>Téléphone</th>
+            <th>Agence</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of clients">
+            <td class="bold-cin">{{ c.cin }}</td>
+            <td>{{ c.prenom }} {{ c.nom }}</td>
+            <td>{{ c.telephone }}</td>
+            <td>{{ c.agence }}</td>
+            <td>
+              <span class="status-pill">{{ c.statut || 'Actif' }}</span>
+            </td>
+            <td class="action-cell">
+              <i class="bi bi-eye action-icon" [routerLink]="['/clients/modifier', c.id]" title="Consulter"></i>
+              <i *ngIf="isGestionnaire" class="bi bi-pencil action-icon" [routerLink]="['/clients/modifier', c.id]" title="Modifier"></i>
+            </td>
+          </tr>
+          <tr *ngIf="clients.length === 0">
+            <td colspan="6" class="empty-state">Aucun client trouvé.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pied de page & Pagination -->
+    <div class="table-footer">
+      <div class="count-text">
+        1 – {{ clients.length }} sur {{ totalElements }} clients
+      </div>
+      <div class="pagination">
+        <button class="pag-btn" [disabled]="currentPage === 0" (click)="changePage(currentPage - 1)">&lt;</button>
+        <span class="pag-page active">{{ currentPage + 1 }}</span>
+        <button class="pag-btn" [disabled]="currentPage >= totalPages - 1" (click)="changePage(currentPage + 1)">&gt;</button>
+      </div>
+    </div>
+
+    <footer class="footer-note">
+      Données fictives • Projet Castel.
+    </footer>
+  </main>
+</div>

@@ -1,0 +1,154 @@
+<div class="app-layout">
+  <!-- Barre latérale bleue foncée -->
+  <aside class="sidebar">
+    <div class="sidebar-menu">
+      <div class="nav-item">
+        <i class="bi bi-house"></i>
+        <span>Tableau de bord</span>
+      </div>
+      <div class="nav-item active">
+        <i class="bi bi-people-fill"></i>
+        <span>Clients</span>
+      </div>
+      <div class="nav-item">
+        <i class="bi bi-calculator"></i>
+        <span>Simulations</span>
+      </div>
+      <div class="nav-item">
+        <i class="bi bi-file-text"></i>
+        <span>Demandes</span>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="avatar-circle">MH</div>
+      <div class="footer-user">
+        <div class="name">{{ username }}</div>
+        <div class="role">CC PRO</div>
+      </div>
+      <i class="bi bi-box-arrow-right logout-btn" (click)="logout()" title="Se déconnecter"></i>
+    </div>
+  </aside>
+
+  <!-- Zone Principale -->
+  <main class="main-body">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-header">
+      <i class="bi bi-house"></i> Clients &gt; <span class="active-crumb">{{ isEditMode ? 'Modifier le client' : 'Ajouter un client' }}</span>
+    </div>
+
+    <h1 class="page-title">{{ isEditMode ? 'Modifier le client' : 'Ajouter un client' }}</h1>
+    <p class="page-subtitle">Renseignez les informations du client.</p>
+
+    <!-- Message d'erreur -->
+    <div *ngIf="errorMessage" class="error-banner">
+      {{ errorMessage }}
+    </div>
+
+    <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+      <!-- 1. Identification du client -->
+      <div class="form-section-card">
+        <div class="section-banner">
+          <i class="bi bi-person-fill"></i> Identification du client
+        </div>
+        <div class="section-content">
+          <div class="grid-2">
+            <div class="input-block">
+              <label>CIN <span class="req">*</span></label>
+              <input type="text" placeholder="Ex. AB123456" formControlName="cin"
+                     [class.error-border]="clientForm.get('cin')?.touched && clientForm.get('cin')?.invalid">
+            </div>
+            <div class="input-block">
+              <label>Nom <span class="req">*</span></label>
+              <input type="text" placeholder="Ex. EL AMRANI" formControlName="nom"
+                     [class.error-border]="clientForm.get('nom')?.touched && clientForm.get('nom')?.invalid">
+            </div>
+          </div>
+          <div class="grid-2 mt-3">
+            <div class="input-block">
+              <label>Prénom <span class="req">*</span></label>
+              <input type="text" placeholder="Ex. Youssef" formControlName="prenom"
+                     [class.error-border]="clientForm.get('prenom')?.touched && clientForm.get('prenom')?.invalid">
+            </div>
+            <div class="input-block">
+              <label>Date de naissance</label>
+              <div class="date-input-wrap">
+                <input type="date" formControlName="dateNaissance">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Coordonnées -->
+      <div class="form-section-card">
+        <div class="section-banner">
+          <i class="bi bi-telephone-fill"></i> Coordonnées
+        </div>
+        <div class="section-content">
+          <div class="grid-2">
+            <div class="input-block">
+              <label>Téléphone <span class="req">*</span></label>
+              <input type="text" placeholder="Ex. 06 12 34 56 78" formControlName="telephone"
+                     [class.error-border]="clientForm.get('telephone')?.touched && clientForm.get('telephone')?.invalid">
+            </div>
+            <div class="input-block">
+              <label>Email</label>
+              <input type="email" placeholder="Ex. nom@exemple.ma" formControlName="email"
+                     [class.error-border]="clientForm.get('email')?.touched && clientForm.get('email')?.invalid">
+            </div>
+          </div>
+          <div class="input-block mt-3">
+            <label>Adresse</label>
+            <input type="text" placeholder="Ex. 123, Avenue Mohammed V" formControlName="adresse">
+          </div>
+          <div class="grid-2 mt-3">
+            <div class="input-block">
+              <label>Ville</label>
+              <input type="text" placeholder="Ex. Rabat" formControlName="ville">
+            </div>
+            <div class="input-block">
+              <label>Code postal</label>
+              <input type="text" placeholder="Ex. 10000" formControlName="codePostal">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Informations professionnelles -->
+      <div class="form-section-card">
+        <div class="section-banner">
+          <i class="bi bi-briefcase-fill"></i> Informations professionnelles
+        </div>
+        <div class="section-content">
+          <div class="grid-2">
+            <div class="input-block">
+              <label>Profession</label>
+              <input type="text" placeholder="Ex. Commerçant" formControlName="profession">
+            </div>
+            <div class="input-block">
+              <label>Agence <span class="req">*</span></label>
+              <select formControlName="agence"
+                      [class.error-border]="clientForm.get('agence')?.touched && clientForm.get('agence')?.invalid">
+                <option value="">Sélectionnez une agence</option>
+                <option value="Casablanca">Casablanca</option>
+                <option value="Rabat">Rabat</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pied de formulaire -->
+      <div class="form-bottom-actions">
+        <span class="required-legend"><span class="req">*</span> Champs obligatoires</span>
+        <div class="action-buttons">
+          <a routerLink="/clients" class="btn-cancel">Annuler</a>
+          <button type="submit" class="btn-yellow" [disabled]="clientForm.invalid">
+            {{ isEditMode ? 'Enregistrer les modifications' : 'Enregistrer le client' }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </main>
+</div>
